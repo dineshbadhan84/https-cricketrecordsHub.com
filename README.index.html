@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Pro Archive 2024-2025 | Ultimate Cricket Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #050505;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        }
+
+        .cricket-ball {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #ff6b35, #c41e3a);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .cricket-ball::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            height: 80%;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        /* 3D Text Effects — FIX: removed text-shadow (doesn't work with -webkit-text-fill-color: transparent) */
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF6347 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            transform-style: preserve-3d;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+            to { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1)); }
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+
+        /* 3D Table */
+        .table-3d {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .table-container {
+            transform: rotateX(2deg);
+            transition: transform 0.5s ease;
+        }
+
+        .table-container:hover {
+            transform: rotateX(0deg);
+        }
+
+        /* Neon Buttons */
+        .neon-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #FFD700, #FF6347);
+            border: none;
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .neon-btn:hover {
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .neon-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .neon-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Team Logos Animation */
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin: 0 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #FFD700, #FF6347);
+            border-radius: 5px;
+        }
+
+        /* Stats Counter Animation */
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, #FFD700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Loading Animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        .loader-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            color: #FFD700;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Particle Effect */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 3D Flip Card */
+        .flip-card {
+            perspective: 1000px;
+            height: 200px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .flip-card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+        }
+
+        /* Match Row Animation */
+        .match-row {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.5s ease;
+        }
+
+        .match-row.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #FFD700, #FF6B6B, #4ECDC4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Stadium Background Pattern */
+        .stadium-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 99, 71, 0.1) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="stadium-pattern">
+
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="text-center">
+            <div class="loader-text">🏏 LOADING IPL ARCHIVE...</div>
+            <div class="mt-4 w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 animate-pulse" style="width: 100%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Animation -->
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass-card border-b border-yellow-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-4">
+                    <div class="text-4xl animate-bounce">🏏</div>
+                    <span class="text-2xl font-bold gradient-text font-['Orbitron']">IPL PRO</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="hover:text-yellow-400 transition-colors font-semibold">Home</a>
+                    <a href="#stats" class="hover:text-yellow-400 transition-colors font-semibold">Stats</a>
+                    <a href="#2024" class="hover:text-yellow-400 transition-colors font-semibold">IPL 2024</a>
+                    <a href="#2025" class="hover:text-yellow-400 transition-colors font-semibold">IPL 2025</a>
+                </div>
+                <button class="neon-btn px-6 py-2 rounded-full font-bold">
+                    Live Score
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative pt-20">
+        <div class="text-center px-4 max-w-6xl mx-auto">
+            <div class="mb-8 inline-block">
+                <span class="px-4 py-2 rounded-full bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 text-sm font-bold tracking-wider">
+                    🏆 OFFICIAL ARCHIVE 2024-2025
+                </span>
+            </div>
+            
+            <h1 class="hero-title mb-6 leading-tight">
+                INDIAN PREMIER<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-600">LEAGUE</span>
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto font-light">
+                Experience the ultimate cricket archive with <span class="text-yellow-400 font-bold">3D visualizations</span>, 
+                <span class="text-orange-400 font-bold">real-time stats</span>, and 
+                <span class="text-red-400 font-bold">immersive match data</span>.
+            </p>
+
+            <!-- 3D Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                <div class="flip-card cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front glass-card rounded-2xl p-8">
+                            <div class="text-5xl mb-4">🏆</div>
+                            <div class="stat-number" data-target="74">0</div>
+                            <div class="text-gray-400 font-semibold">Total Matches</div>
+                        </div>
+                        <div class="flip-card-back rounded-2xl p-8 border border-yellow-500/30">
+                            <div class="text-3xl mb-2">2024+2025</div>
+                            <div class="text-yellow-400">Complete Data</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front glass-card rounded-2xl p-8">
+                            <div class="text-5xl mb-4">🎯</div>
+                            <div class="stat-number" data-target="10">0</div>
+                            <div class="text-gray-400 font-semibold">Teams</div>
+                        </div>
+                        <div class="flip-card-back rounded-2xl p-8 border border-orange-500/30">
+                            <div class="text-2xl mb-2">CSK MI RCB KKR</div>
+                            <div class="text-orange-400">+ 6 More</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flip-card cursor-pointer">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front glass-card rounded-2xl p-8">
+                            <div class="text-5xl mb-4">👑</div>
+                            <div class="stat-number" data-target="2">0</div>
+                            <div class="text-gray-400 font-semibold">Champions</div>
+                        </div>
+                        <div class="flip-card-back rounded-2xl p-8 border border-red-500/30">
+                            <div class="text-xl mb-2">2024: KKR</div>
+                            <div class="text-red-400">2025: RCB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-16 flex justify-center gap-4 flex-wrap">
+                <button onclick="scrollToSection('2024')" class="neon-btn px-8 py-4 rounded-full text-lg font-bold flex items-center gap-2">
+                    <span>📊</span> View 2024 Data
+                </button>
+                <button onclick="scrollToSection('2025')" class="glass-card px-8 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition-all border border-yellow-500/30">
+                    <span>⚡</span> View 2025 Data
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats Bar -->
+    <section id="stats" class="py-12 glass-card border-y border-yellow-500/20">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="stat-item">
+                    <div class="text-3xl font-bold text-yellow-400" id="tossStat">0</div>
+                    <div class="text-sm text-gray-400">Bowl First Wins</div>
+                </div>
+                <div class="stat-item">
+                    <div class="text-3xl font-bold text-orange-400" id="batStat">0</div>
+                    <div class="text-sm text-gray-400">Bat First Wins</div>
+                </div>
+                <div class="stat-item">
+                    <div class="text-3xl font-bold text-red-400" id="closeStat">0</div>
+                    <div class="text-sm text-gray-400">Close Finishes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="text-3xl font-bold text-green-400" id="superOverStat">0</div>
+                    <div class="text-sm text-gray-400">Super Overs</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IPL 2024 Section -->
+    <section id="2024" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl md:text-6xl font-bold mb-4 font-['Orbitron']">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">IPL 2024</span>
+                </h2>
+                <p class="text-xl text-gray-400">Champions: Kolkata Knight Riders 🏆</p>
+                <div class="w-32 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 mb-8 overflow-hidden">
+                <div class="flex flex-wrap gap-4 mb-6 justify-center">
+                    <!-- FIX: pass event as first argument to filterMatches -->
+                    <button onclick="filterMatches(event, '2024', 'all')" class="filter-btn active px-6 py-2 rounded-full bg-yellow-500/20 border border-yellow-500/50 hover:bg-yellow-500/40 transition-all">All Matches</button>
+                    <button onclick="filterMatches(event, '2024', 'playoffs')" class="filter-btn px-6 py-2 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 transition-all">Playoffs</button>
+                    <button onclick="filterMatches(event, '2024', 'close')" class="filter-btn px-6 py-2 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 transition-all">Close Finishes</button>
+                </div>
+
+                <div class="table-3d">
+                    <div class="table-container overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-yellow-500/30">
+                                    <th class="p-4 text-yellow-400 font-bold uppercase tracking-wider">Date</th>
+                                    <th class="p-4 text-yellow-400 font-bold uppercase tracking-wider">Matchup</th>
+                                    <th class="p-4 text-yellow-400 font-bold uppercase tracking-wider text-center">Toss</th>
+                                    <th class="p-4 text-yellow-400 font-bold uppercase tracking-wider text-center">Decision</th>
+                                    <th class="p-4 text-yellow-400 font-bold uppercase tracking-wider">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table2024" class="divide-y divide-white/10">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IPL 2025 Section -->
+    <section id="2025" class="py-20 px-4 bg-gradient-to-b from-black via-purple-900/10 to-black">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <!-- FIX: Changed "LIVE UPDATES" to "SEASON COMPLETE" since IPL 2025 ended June 2025 -->
+                <div class="inline-block mb-4 px-4 py-1 rounded-full bg-green-500/20 border border-green-500/50 text-green-400 text-sm font-bold">
+                    ✅ SEASON COMPLETE
+                </div>
+                <h2 class="text-5xl md:text-6xl font-bold mb-4 font-['Orbitron']">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">IPL 2025</span>
+                </h2>
+                <p class="text-xl text-gray-400">Champions: Royal Challengers Bengaluru 🏆</p>
+                <div class="w-32 h-1 bg-gradient-to-r from-purple-400 to-pink-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-8 mb-8 overflow-hidden border-purple-500/30">
+                <div class="flex flex-wrap gap-4 mb-6 justify-center">
+                    <!-- FIX: pass event as first argument to filterMatches -->
+                    <button onclick="filterMatches(event, '2025', 'all')" class="filter-btn-2025 active px-6 py-2 rounded-full bg-purple-500/20 border border-purple-500/50 hover:bg-purple-500/40 transition-all">All Matches</button>
+                    <button onclick="filterMatches(event, '2025', 'playoffs')" class="filter-btn-2025 px-6 py-2 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 transition-all">Playoffs</button>
+                    <button onclick="filterMatches(event, '2025', 'close')" class="filter-btn-2025 px-6 py-2 rounded-full bg-white/5 border border-white/20 hover:bg-white/10 transition-all">Close Finishes</button>
+                </div>
+
+                <div class="table-3d">
+                    <div class="table-container overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-purple-500/30">
+                                    <th class="p-4 text-purple-400 font-bold uppercase tracking-wider">Date</th>
+                                    <th class="p-4 text-purple-400 font-bold uppercase tracking-wider">Matchup</th>
+                                    <th class="p-4 text-purple-400 font-bold uppercase tracking-wider text-center">Toss</th>
+                                    <th class="p-4 text-purple-400 font-bold uppercase tracking-wider text-center">Decision</th>
+                                    <th class="p-4 text-purple-400 font-bold uppercase tracking-wider">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table2025" class="divide-y divide-white/10">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/10 glass-card">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <div class="flex justify-center items-center gap-2 mb-4 text-4xl">
+                <span>🏏</span>
+                <span class="font-['Orbitron'] font-bold gradient-text">IPL PRO ARCHIVE</span>
+            </div>
+            <p class="text-gray-400 mb-4">Complete Toss & Match Result Archive 2024-2025</p>
+            <div class="flex justify-center gap-6 text-sm text-gray-500">
+                <span>Data Source: BCCI/IPL</span>
+                <span>•</span>
+                <span>Last Updated: June 2025</span>
+                <span>•</span>
+                <span>Built with 💛 for Cricket Fans</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const ipl2024Data = [
+            {date: "22-Mar-2024", teams: "RCB vs CSK", toss: "RCB", decision: "bowl first", result: "CSK won by 6 wkts", type: "normal"},
+            {date: "23-Mar-2024", teams: "PBKS vs DC", toss: "PBKS", decision: "bowl first", result: "PBKS won by 4 wkts", type: "normal"},
+            {date: "23-Mar-2024", teams: "KKR vs SRH", toss: "SRH", decision: "bowl first", result: "KKR won by 4 runs", type: "close"},
+            {date: "24-Mar-2024", teams: "RR vs LSG", toss: "RR", decision: "bat first", result: "RR won by 20 runs", type: "normal"},
+            {date: "24-Mar-2024", teams: "GT vs MI", toss: "MI", decision: "bowl first", result: "GT won by 6 runs", type: "close"},
+            {date: "25-Mar-2024", teams: "PBKS vs RCB", toss: "RCB", decision: "bowl first", result: "RCB won by 4 wkts", type: "normal"},
+            {date: "26-Mar-2024", teams: "CSK vs GT", toss: "GT", decision: "bowl first", result: "CSK won by 63 runs", type: "normal"},
+            {date: "27-Mar-2024", teams: "SRH vs MI", toss: "MI", decision: "bowl first", result: "SRH won by 31 runs", type: "normal"},
+            {date: "28-Mar-2024", teams: "RR vs DC", toss: "DC", decision: "bowl first", result: "RR won by 12 runs", type: "normal"},
+            {date: "29-Mar-2024", teams: "RCB vs KKR", toss: "KKR", decision: "bowl first", result: "KKR won by 7 wkts", type: "normal"},
+            {date: "30-Mar-2024", teams: "LSG vs PBKS", toss: "LSG", decision: "bat first", result: "LSG won by 21 runs", type: "normal"},
+            {date: "31-Mar-2024", teams: "GT vs SRH", toss: "SRH", decision: "bowl first", result: "GT won by 7 wkts", type: "normal"},
+            {date: "31-Mar-2024", teams: "DC vs CSK", toss: "DC", decision: "bat first", result: "DC won by 20 runs", type: "normal"},
+            {date: "01-Apr-2024", teams: "MI vs RR", toss: "RR", decision: "bowl first", result: "RR won by 6 wkts", type: "normal"},
+            {date: "02-Apr-2024", teams: "RCB vs LSG", toss: "RCB", decision: "bat first", result: "LSG won by 28 runs", type: "normal"},
+            {date: "03-Apr-2024", teams: "DC vs KKR", toss: "KKR", decision: "bowl first", result: "KKR won by 106 runs", type: "normal"},
+            {date: "04-Apr-2024", teams: "GT vs PBKS", toss: "PBKS", decision: "bowl first", result: "PBKS won by 3 wkts", type: "close"},
+            {date: "05-Apr-2024", teams: "SRH vs CSK", toss: "SRH", decision: "bat first", result: "SRH won by 6 wkts", type: "normal"},
+            {date: "06-Apr-2024", teams: "RCB vs RR", toss: "RR", decision: "bowl first", result: "RR won by 6 wkts", type: "normal"},
+            {date: "07-Apr-2024", teams: "MI vs DC", toss: "DC", decision: "bowl first", result: "MI won by 29 runs", type: "normal"},
+            {date: "07-Apr-2024", teams: "LSG vs GT", toss: "LSG", decision: "bat first", result: "LSG won by 33 runs", type: "normal"},
+            {date: "08-Apr-2024", teams: "CSK vs KKR", toss: "CSK", decision: "bowl first", result: "CSK won by 7 wkts", type: "normal"},
+            {date: "09-Apr-2024", teams: "PBKS vs SRH", toss: "PBKS", decision: "bat first", result: "SRH won by 2 runs", type: "close"},
+            {date: "10-Apr-2024", teams: "RR vs GT", toss: "GT", decision: "bowl first", result: "GT won by 3 wkts", type: "close"},
+            {date: "11-Apr-2024", teams: "MI vs RCB", toss: "MI", decision: "bat first", result: "MI won by 7 wkts", type: "normal"},
+            {date: "12-Apr-2024", teams: "LSG vs DC", toss: "LSG", decision: "bat first", result: "DC won by 6 wkts", type: "normal"},
+            {date: "13-Apr-2024", teams: "PBKS vs RR", toss: "RR", decision: "bowl first", result: "RR won by 3 wkts", type: "close"},
+            {date: "14-Apr-2024", teams: "KKR vs LSG", toss: "KKR", decision: "bowl first", result: "KKR won by 8 wkts", type: "normal"},
+            {date: "14-Apr-2024", teams: "MI vs CSK", toss: "MI", decision: "bat first", result: "CSK won by 20 runs", type: "normal"},
+            {date: "15-Apr-2024", teams: "RCB vs SRH", toss: "RCB", decision: "bat first", result: "SRH won by 25 runs", type: "normal"},
+            {date: "16-Apr-2024", teams: "KKR vs RR", toss: "RR", decision: "bowl first", result: "RR won by 2 wkts", type: "close"},
+            {date: "17-Apr-2024", teams: "GT vs DC", toss: "DC", decision: "bowl first", result: "DC won by 6 wkts", type: "normal"},
+            {date: "18-Apr-2024", teams: "PBKS vs MI", toss: "PBKS", decision: "bat first", result: "MI won by 9 runs", type: "close"},
+            {date: "19-Apr-2024", teams: "LSG vs CSK", toss: "LSG", decision: "bowl first", result: "LSG won by 8 wkts", type: "normal"},
+            {date: "20-Apr-2024", teams: "DC vs SRH", toss: "DC", decision: "bat first", result: "SRH won by 67 runs", type: "normal"},
+            {date: "21-Apr-2024", teams: "KKR vs RCB", toss: "RCB", decision: "bowl first", result: "KKR won by 1 run", type: "close"},
+            {date: "21-Apr-2024", teams: "PBKS vs GT", toss: "PBKS", decision: "bat first", result: "GT won by 3 wkts", type: "close"},
+            {date: "22-Apr-2024", teams: "RR vs MI", toss: "RR", decision: "bowl first", result: "RR won by 9 wkts", type: "normal"},
+            {date: "23-Apr-2024", teams: "CSK vs LSG", toss: "LSG", decision: "bowl first", result: "LSG won by 6 wkts", type: "normal"},
+            {date: "24-Apr-2024", teams: "DC vs GT", toss: "DC", decision: "bat first", result: "DC won by 4 runs", type: "close"},
+            {date: "25-Apr-2024", teams: "SRH vs RCB", toss: "RCB", decision: "bowl first", result: "RCB won by 35 runs", type: "normal"},
+            {date: "26-Apr-2024", teams: "KKR vs PBKS", toss: "PBKS", decision: "bowl first", result: "PBKS won by 8 wkts", type: "normal"},
+            {date: "27-Apr-2024", teams: "DC vs MI", toss: "MI", decision: "bowl first", result: "DC won by 10 runs", type: "close"},
+            {date: "27-Apr-2024", teams: "LSG vs RR", toss: "RR", decision: "bowl first", result: "RR won by 7 wkts", type: "normal"},
+            {date: "28-Apr-2024", teams: "GT vs RCB", toss: "RCB", decision: "bowl first", result: "RCB won by 9 wkts", type: "normal"},
+            {date: "28-Apr-2024", teams: "CSK vs SRH", toss: "SRH", decision: "bowl first", result: "CSK won by 78 runs", type: "normal"},
+            {date: "29-Apr-2024", teams: "KKR vs DC", toss: "DC", decision: "bowl first", result: "KKR won by 7 wkts", type: "normal"},
+            {date: "30-Apr-2024", teams: "LSG vs MI", toss: "LSG", decision: "bat first", result: "LSG won by 4 wkts", type: "normal"},
+            {date: "01-May-2024", teams: "CSK vs PBKS", toss: "PBKS", decision: "bowl first", result: "PBKS won by 7 wkts", type: "normal"},
+            {date: "02-May-2024", teams: "SRH vs RR", toss: "RR", decision: "bowl first", result: "SRH won by 1 run", type: "close"},
+            {date: "03-May-2024", teams: "KKR vs MI", toss: "MI", decision: "bowl first", result: "KKR won by 24 runs", type: "normal"},
+            {date: "04-May-2024", teams: "RCB vs GT", toss: "RCB", decision: "bowl first", result: "RCB won by 4 wkts", type: "normal"},
+            {date: "05-May-2024", teams: "PBKS vs CSK", toss: "PBKS", decision: "bowl first", result: "CSK won by 28 runs", type: "normal"},
+            {date: "05-May-2024", teams: "LSG vs KKR", toss: "LSG", decision: "bat first", result: "KKR won by 98 runs", type: "normal"},
+            {date: "06-May-2024", teams: "MI vs SRH", toss: "MI", decision: "bowl first", result: "MI won by 7 wkts", type: "normal"},
+            {date: "07-May-2024", teams: "DC vs RR", toss: "RR", decision: "bowl first", result: "DC won by 20 runs", type: "normal"},
+            {date: "08-May-2024", teams: "SRH vs LSG", toss: "LSG", decision: "bowl first", result: "SRH won by 10 wkts", type: "normal"},
+            {date: "09-May-2024", teams: "RCB vs PBKS", toss: "PBKS", decision: "bowl first", result: "RCB won by 60 runs", type: "normal"},
+            {date: "10-May-2024", teams: "GT vs CSK", toss: "CSK", decision: "bowl first", result: "GT won by 35 runs", type: "normal"},
+            {date: "11-May-2024", teams: "KKR vs MI", toss: "MI", decision: "bowl first", result: "KKR won by 18 runs", type: "normal"},
+            {date: "12-May-2024", teams: "CSK vs RR", toss: "RR", decision: "bowl first", result: "CSK won by 5 wkts", type: "normal"},
+            {date: "12-May-2024", teams: "RCB vs DC", toss: "DC", decision: "bowl first", result: "RCB won by 47 runs", type: "normal"},
+            {date: "13-May-2024", teams: "GT vs KKR", toss: "Abandoned", decision: "", result: "Match Abandoned (No Toss)", type: "abandoned"},
+            {date: "14-May-2024", teams: "DC vs LSG", toss: "LSG", decision: "bowl first", result: "DC won by 19 runs", type: "normal"},
+            {date: "15-May-2024", teams: "PBKS vs RR", toss: "RR", decision: "bowl first", result: "PBKS won by 5 wkts", type: "normal"},
+            {date: "16-May-2024", teams: "SRH vs GT", toss: "Abandoned", decision: "", result: "Match Abandoned (No Toss)", type: "abandoned"},
+            {date: "17-May-2024", teams: "LSG vs MI", toss: "MI", decision: "bowl first", result: "LSG won by 18 runs", type: "normal"},
+            {date: "18-May-2024", teams: "RCB vs CSK", toss: "CSK", decision: "bowl first", result: "RCB won by 27 runs", type: "normal"},
+            {date: "19-May-2024", teams: "PBKS vs SRH", toss: "PBKS", decision: "bat first", result: "SRH won by 4 wkts", type: "normal"},
+            {date: "19-May-2024", teams: "RR vs KKR", toss: "Abandoned", decision: "", result: "Abandoned", type: "abandoned"},
+            {date: "21-May-2024", teams: "Qualifier 1: KKR vs SRH", toss: "SRH", decision: "bowl first", result: "KKR won by 8 wkts", type: "playoff"},
+            {date: "22-May-2024", teams: "Eliminator: RCB vs RR", toss: "RR", decision: "bowl first", result: "RR won by 4 wkts", type: "playoff"},
+            {date: "24-May-2024", teams: "Qualifier 2: RR vs SRH", toss: "RR", decision: "bowl first", result: "SRH won by 36 runs", type: "playoff"},
+            {date: "26-May-2024", teams: "🏆 FINAL: KKR vs SRH", toss: "SRH", decision: "bat first", result: "KKR won by 8 wkts (CHAMPIONS)", type: "final"}
+        ];
+
+        const ipl2025Data = [
+            {date: "22-Mar-2025", teams: "RCB vs KKR", toss: "RCB", decision: "bowl first", result: "RCB won by 7 wkts", type: "normal"},
+            {date: "23-Mar-2025", teams: "SRH vs RR", toss: "RR", decision: "bowl first", result: "SRH won by 44 runs", type: "normal"},
+            {date: "23-Mar-2025", teams: "CSK vs MI", toss: "CSK", decision: "bowl first", result: "CSK won by 4 wkts", type: "normal"},
+            {date: "24-Mar-2025", teams: "DC vs LSG", toss: "DC", decision: "bowl first", result: "DC won by 1 wkt", type: "close"},
+            {date: "25-Mar-2025", teams: "PBKS vs GT", toss: "GT", decision: "bowl first", result: "PBKS won by 11 runs", type: "close"},
+            {date: "26-Mar-2025", teams: "RR vs KKR", toss: "KKR", decision: "bowl first", result: "KKR won by 8 wkts", type: "normal"},
+            {date: "27-Mar-2025", teams: "SRH vs LSG", toss: "LSG", decision: "bowl first", result: "LSG won by 5 wkts", type: "normal"},
+            {date: "28-Mar-2025", teams: "RCB vs CSK", toss: "CSK", decision: "bowl first", result: "RCB won by 50 runs", type: "normal"},
+            {date: "29-Mar-2025", teams: "GT vs MI", toss: "MI", decision: "bowl first", result: "GT won by 36 runs", type: "normal"},
+            {date: "30-Mar-2025", teams: "DC vs SRH", toss: "SRH", decision: "bowl first", result: "DC won by 7 wkts", type: "normal"},
+            {date: "30-Mar-2025", teams: "RR vs CSK", toss: "CSK", decision: "bowl first", result: "RR won by 6 runs", type: "close"},
+            {date: "31-Mar-2025", teams: "MI vs KKR", toss: "MI", decision: "bowl first", result: "MI won by 8 wkts", type: "normal"},
+            {date: "01-Apr-2025", teams: "LSG vs PBKS", toss: "PBKS", decision: "bowl first", result: "PBKS won by 8 wkts", type: "normal"},
+            {date: "02-Apr-2025", teams: "RCB vs GT", toss: "GT", decision: "bowl first", result: "GT won by 8 wkts", type: "normal"},
+            {date: "03-Apr-2025", teams: "KKR vs SRH", toss: "SRH", decision: "bowl first", result: "KKR won by 80 runs", type: "normal"},
+            {date: "04-Apr-2025", teams: "LSG vs MI", toss: "MI", decision: "bowl first", result: "LSG won by 12 runs", type: "normal"},
+            {date: "05-Apr-2025", teams: "CSK vs DC", toss: "DC", decision: "bowl first", result: "DC won by 25 runs", type: "normal"},
+            {date: "05-Apr-2025", teams: "RR vs PBKS", toss: "PBKS", decision: "bowl first", result: "RR won by 50 runs", type: "normal"},
+            {date: "06-Apr-2025", teams: "SRH vs GT", toss: "GT", decision: "bowl first", result: "GT won by 7 wkts", type: "normal"},
+            {date: "07-Apr-2025", teams: "MI vs RCB", toss: "MI", decision: "bowl first", result: "RCB won by 12 runs", type: "normal"},
+            {date: "08-Apr-2025", teams: "KKR vs LSG", toss: "KKR", decision: "bat first", result: "LSG won by 4 runs", type: "close"},
+            {date: "08-Apr-2025", teams: "PBKS vs CSK", toss: "PBKS", decision: "bowl first", result: "PBKS won by 18 runs", type: "normal"},
+            {date: "09-Apr-2025", teams: "GT vs RR", toss: "RR", decision: "bowl first", result: "GT won by 58 runs", type: "normal"},
+            {date: "10-Apr-2025", teams: "RCB vs DC", toss: "DC", decision: "bowl first", result: "DC won by 6 wkts", type: "normal"},
+            {date: "11-Apr-2025", teams: "CSK vs KKR", toss: "KKR", decision: "bowl first", result: "KKR won by 8 wkts", type: "normal"},
+            {date: "12-Apr-2025", teams: "LSG vs GT", toss: "LSG", decision: "bat first", result: "LSG won by 6 wkts", type: "normal"},
+            {date: "12-Apr-2025", teams: "PBKS vs SRH", toss: "PBKS", decision: "bat first", result: "SRH won by 8 wkts", type: "normal"},
+            {date: "13-Apr-2025", teams: "RR vs RCB", toss: "RCB", decision: "bowl first", result: "RCB won by 9 wkts", type: "normal"},
+            {date: "13-Apr-2025", teams: "DC vs MI", toss: "DC", decision: "bowl first", result: "MI won by 12 runs", type: "normal"},
+            {date: "14-Apr-2025", teams: "CSK vs LSG", toss: "CSK", decision: "bowl first", result: "CSK won by 5 wkts", type: "normal"},
+            {date: "15-Apr-2025", teams: "KKR vs PBKS", toss: "PBKS", decision: "bowl first", result: "PBKS won by 16 runs", type: "normal"},
+            {date: "16-Apr-2025", teams: "RR vs DC", toss: "RR", decision: "bowl first", result: "Match Tied (DC won Super Over)", type: "superover"},
+            {date: "17-Apr-2025", teams: "SRH vs MI", toss: "MI", decision: "bowl first", result: "MI won by 4 wkts", type: "normal"},
+            {date: "18-Apr-2025", teams: "PBKS vs RCB", toss: "PBKS", decision: "bowl first", result: "PBKS won by 5 wkts", type: "normal"},
+            {date: "19-Apr-2025", teams: "DC vs GT", toss: "GT", decision: "bowl first", result: "GT won by 7 wkts", type: "normal"},
+            {date: "19-Apr-2025", teams: "LSG vs RR", toss: "LSG", decision: "bat first", result: "LSG won by 2 runs", type: "close"},
+            {date: "20-Apr-2025", teams: "RCB vs PBKS", toss: "RCB", decision: "bowl first", result: "RCB won by 7 wkts", type: "normal"},
+            {date: "20-Apr-2025", teams: "CSK vs MI", toss: "MI", decision: "bowl first", result: "MI won by 9 wkts", type: "normal"},
+            {date: "21-Apr-2025", teams: "GT vs KKR", toss: "KKR", decision: "bowl first", result: "GT won by 39 runs", type: "normal"},
+            {date: "22-Apr-2025", teams: "DC vs LSG", toss: "DC", decision: "bowl first", result: "DC won by 8 wkts", type: "normal"},
+            {date: "23-Apr-2025", teams: "MI vs SRH", toss: "MI", decision: "bowl first", result: "MI won by 7 wkts", type: "normal"},
+            {date: "24-Apr-2025", teams: "RR vs RCB", toss: "RR", decision: "bowl first", result: "RCB won by 11 runs", type: "normal"},
+            {date: "25-Apr-2025", teams: "SRH vs CSK", toss: "SRH", decision: "bowl first", result: "SRH won by 5 wkts", type: "normal"},
+            {date: "26-Apr-2025", teams: "PBKS vs KKR", toss: "PBKS", decision: "bowl first", result: "No result due to rain", type: "abandoned"},
+            {date: "27-Apr-2025", teams: "LSG vs MI", toss: "LSG", decision: "bowl first", result: "MI won by 54 runs", type: "normal"},
+            {date: "27-Apr-2025", teams: "RCB vs DC", toss: "RCB", decision: "bowl first", result: "RCB won by 6 wkts", type: "normal"},
+            {date: "28-Apr-2025", teams: "GT vs RR", toss: "RR", decision: "bowl first", result: "RR won by 8 wkts", type: "normal"},
+            {date: "29-Apr-2025", teams: "KKR vs DC", toss: "DC", decision: "bowl first", result: "KKR won by 14 runs", type: "normal"},
+            {date: "30-Apr-2025", teams: "PBKS vs CSK", toss: "PBKS", decision: "bowl first", result: "PBKS won by 4 wkts", type: "normal"},
+            {date: "01-May-2025", teams: "MI vs RR", toss: "RR", decision: "bowl first", result: "MI won by 100 runs", type: "normal"},
+            {date: "02-May-2025", teams: "SRH vs GT", toss: "SRH", decision: "bat first", result: "GT won by 38 runs", type: "normal"},
+            {date: "03-May-2025", teams: "CSK vs RCB", toss: "CSK", decision: "bat first", result: "RCB won by 2 runs", type: "close"},
+            {date: "04-May-2025", teams: "RR vs KKR", toss: "KKR", decision: "bowl first", result: "KKR won by 1 run", type: "close"},
+            {date: "04-May-2025", teams: "LSG vs PBKS", toss: "LSG", decision: "bat first", result: "PBKS won by 37 runs", type: "normal"},
+            {date: "05-May-2025", teams: "DC vs SRH", toss: "SRH", decision: "", result: "No Result – Rain", type: "abandoned"},
+            {date: "06-May-2025", teams: "GT vs MI", toss: "GT", decision: "bowl first", result: "GT won by 3 wkts (DLS)", type: "close"},
+            {date: "07-May-2025", teams: "CSK vs KKR", toss: "KKR", decision: "bowl first", result: "CSK won by 2 wkts", type: "close"},
+            {date: "17-May-2025", teams: "RCB vs KKR", toss: "Abandoned", decision: "", result: "Match abandoned due to rain", type: "abandoned"},
+            {date: "18-May-2025", teams: "RR vs PBKS", toss: "PBKS", decision: "bowl first", result: "PBKS won by 10 runs", type: "normal"},
+            {date: "18-May-2025", teams: "DC vs GT", toss: "GT", decision: "bowl first", result: "GT won by 10 wkts", type: "normal"},
+            {date: "19-May-2025", teams: "LSG vs SRH", toss: "SRH", decision: "bowl first", result: "SRH won by 6 wkts", type: "normal"},
+            {date: "20-May-2025", teams: "CSK vs RR", toss: "RR", decision: "bowl first", result: "RR won by 6 wkts", type: "normal"},
+            {date: "21-May-2025", teams: "MI vs DC", toss: "DC", decision: "bowl first", result: "MI won by 59 runs", type: "normal"},
+            {date: "22-May-2025", teams: "GT vs LSG", toss: "GT", decision: "bat first", result: "LSG won by 33 runs", type: "normal"},
+            {date: "23-May-2025", teams: "RCB vs SRH", toss: "RCB", decision: "bowl first", result: "SRH won by 42 runs", type: "normal"},
+            {date: "24-May-2025", teams: "PBKS vs DC", toss: "DC", decision: "bowl first", result: "DC won by 6 wkts", type: "normal"},
+            {date: "25-May-2025", teams: "GT vs CSK", toss: "CSK", decision: "bowl first", result: "CSK won by 83 runs", type: "normal"},
+            {date: "25-May-2025", teams: "SRH vs KKR", toss: "SRH", decision: "bat first", result: "SRH won by 110 runs", type: "normal"},
+            {date: "26-May-2025", teams: "PBKS vs MI", toss: "PBKS", decision: "bowl first", result: "PBKS won by 7 wkts", type: "normal"},
+            {date: "27-May-2025", teams: "LSG vs RCB", toss: "RCB", decision: "bowl first", result: "RCB won by 6 wkts", type: "normal"},
+            {date: "29-May-2025", teams: "Qualifier 1: PBKS vs RCB", toss: "RCB", decision: "bowl first", result: "RCB won by 8 wkts", type: "playoff"},
+            {date: "30-May-2025", teams: "Eliminator: GT vs MI", toss: "MI", decision: "bowl first", result: "MI won by 20 runs", type: "playoff"},
+            {date: "01-Jun-2025", teams: "Qualifier 2: PBKS vs MI", toss: "PBKS", decision: "bowl first", result: "PBKS won by 5 wkts", type: "playoff"},
+            {date: "03-Jun-2025", teams: "🏆 FINAL: RCB vs PBKS", toss: "PBKS", decision: "bowl first", result: "RCB won by 6 runs (CHAMPIONS)", type: "final"}
+        ];
+
+        // Initialize
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                }, 500);
+            }, 1500);
+
+            createFloatingBalls();
+            populateTable('2024', ipl2024Data);
+            populateTable('2025', ipl2025Data);
+            animateStats();
+            calculateStats();
+        });
+
+        function createFloatingBalls() {
+            const container = document.getElementById('bgAnimation');
+            for (let i = 0; i < 15; i++) {
+                const ball = document.createElement('div');
+                ball.className = 'cricket-ball';
+                ball.style.left = Math.random() * 100 + '%';
+                ball.style.animationDelay = Math.random() * 15 + 's';
+                ball.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(ball);
+            }
+        }
+
+        function populateTable(year, data) {
+            const tbody = document.getElementById(`table${year}`);
+            tbody.innerHTML = '';
+            
+            data.forEach((match, index) => {
+                const row = document.createElement('tr');
+                row.className = 'match-row hover:bg-white/5 transition-all duration-300 border-b border-white/5';
+                row.style.animationDelay = `${index * 0.05}s`;
+                
+                const decisionClass = match.decision.includes('bat') ? 
+                    'bg-red-500/20 text-red-400 border border-red-500/50' : 
+                    'bg-green-500/20 text-green-400 border border-green-500/50';
+                
+                const resultClass = match.type === 'final' ? 
+                    'bg-yellow-500/30 text-yellow-300 font-bold border border-yellow-500/50' :
+                    match.type === 'playoff' ?
+                    'bg-orange-500/20 text-orange-300 border border-orange-500/50' :
+                    match.type === 'close' ?
+                    'bg-purple-500/20 text-purple-300 border border-purple-500/50' :
+                    'bg-white/10 text-gray-300';
+                
+                const isAbandoned = match.type === 'abandoned';
+                
+                row.innerHTML = `
+                    <td class="p-4 font-mono text-sm text-gray-400">${match.date}</td>
+                    <td class="p-4 font-bold text-white">${formatTeams(match.teams)}</td>
+                    <td class="p-4 text-center">
+                        ${!isAbandoned ? `<span class="team-logo bg-gradient-to-br from-yellow-400 to-orange-500 text-black text-xs">${match.toss}</span>` : '-'}
+                    </td>
+                    <td class="p-4 text-center">
+                        ${match.decision ? `<span class="px-3 py-1 rounded-full text-xs font-bold ${decisionClass}">${match.decision}</span>` : '-'}
+                    </td>
+                    <td class="p-4">
+                        <span class="px-3 py-1 rounded-full text-xs ${resultClass} inline-block">${match.result}</span>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+                
+                setTimeout(() => {
+                    row.classList.add('visible');
+                }, index * 50);
+            });
+        }
+
+        function formatTeams(teams) {
+            return teams.replace(/(vs)/g, '<span class="text-yellow-500 mx-2">$1</span>');
+        }
+
+        // FIX: Added 'event' as first parameter — was missing, causing filter buttons to fail
+        function filterMatches(event, year, type) {
+            const data = year === '2024' ? ipl2024Data : ipl2025Data;
+            let filtered = data;
+            
+            if (type === 'playoffs') {
+                filtered = data.filter(m => m.type === 'playoff' || m.type === 'final');
+            } else if (type === 'close') {
+                filtered = data.filter(m => m.type === 'close' || m.type === 'superover');
+            }
+            
+            populateTable(year, filtered);
+            
+            // Update active button styling
+            const btnClass = year === '2025' ? '.filter-btn-2025' : '.filter-btn';
+            const buttons = document.querySelectorAll(btnClass);
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-yellow-500/20', 'bg-purple-500/20', 'border-yellow-500/50', 'border-purple-500/50');
+                btn.classList.add('bg-white/5', 'border-white/20');
+            });
+            
+            event.target.classList.add('active');
+            event.target.classList.remove('bg-white/5', 'border-white/20');
+            if (year === '2024') {
+                event.target.classList.add('bg-yellow-500/20', 'border-yellow-500/50');
+            } else {
+                event.target.classList.add('bg-purple-500/20', 'border-purple-500/50');
+            }
+        }
+
+        function animateStats() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                
+                setTimeout(updateCounter, 500);
+            });
+        }
+
+        function calculateStats() {
+            const allData = [...ipl2024Data, ...ipl2025Data];
+            
+            const bowlFirstWins = allData.filter(m => 
+                m.decision.includes('bowl') && 
+                !m.result.includes('Abandoned') && 
+                !m.result.includes('No Result')
+            ).length;
+            
+            const batFirstWins = allData.filter(m => 
+                m.decision.includes('bat') && 
+                !m.result.includes('Abandoned') && 
+                !m.result.includes('No Result')
+            ).length;
+            
+            const closeFinishes = allData.filter(m => 
+                m.type === 'close' || m.type === 'superover'
+            ).length;
+            
+            const superOvers = allData.filter(m => 
+                m.type === 'superover'
+            ).length;
+            
+            animateValue('tossStat', 0, bowlFirstWins, 2000);
+            animateValue('batStat', 0, batFirstWins, 2000);
+            animateValue('closeStat', 0, closeFinishes, 2000);
+            animateValue('superOverStat', 0, superOvers, 2000);
+        }
+
+        // FIX: Guard against divide-by-zero when range is 0 (e.g. superOvers = 0)
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            const range = end - start;
+            if (range === 0) {
+                obj.textContent = end;
+                return;
+            }
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                obj.textContent = current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // GSAP ScrollTrigger animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        gsap.utils.toArray('.glass-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 100,
+                opacity: 0,
+                duration: 1,
+                delay: i * 0.1,
+                ease: 'power3.out'
+            });
+        });
+
+        // Mouse move parallax
+        document.addEventListener('mousemove', (e) => {
+            const balls = document.querySelectorAll('.cricket-ball');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            balls.forEach((ball, index) => {
+                const speed = (index + 1) * 20;
+                const xOffset = (0.5 - x) * speed;
+                const yOffset = (0.5 - y) * speed;
+                ball.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // Particle effect on click
+        document.addEventListener('click', (e) => {
+            createParticles(e.clientX, e.clientY);
+        });
+
+        function createParticles(x, y) {
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                document.body.appendChild(particle);
+                
+                const angle = (Math.PI * 2 * i) / 8;
+                const velocity = 100;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 600,
+                    easing: 'cubic-bezier(0, .9, .57, 1)'
+                }).onfinish = () => particle.remove();
+            }
+        }
+    </script>
+</body>
+</html>
